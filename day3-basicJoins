@@ -1,0 +1,41 @@
+SELECT *
+FROM customer;
+SELECT *
+FROM order_;
+
+
+-- INNER JOIN EXAMPLE
+-- Can also be written as JOIN
+SELECT first_name, last_name,email, order_date, amount
+FROM customer
+INNER JOIN order_
+ON customer.customer_id = order_.customer_id;
+
+-- LEFT JOIN
+SELECT first_name, last_name, email, order_date, amount
+FROM customer
+LEFT JOIN order_
+ON customer.customer_id = order_.customer_id;
+
+--show all customers who have not made an order
+SELECT first_name, last_name, email, order_date, amount
+FROM customer
+LEFT JOIN order_
+ON customer.customer_id = order_.customer_id
+WHERE order_date IS NULL;
+
+
+-- RIGHT JOIN
+SELECT first_name, last_name, email, order_date, amount
+FROM customer
+RIGHT JOIN order_
+ON customer.customer_id = order_.customer_id;
+
+-- customer Table == Table A (Left)
+-- order_ Table == Table B (Right)
+
+-- FUll JOIN
+SELECT first_name, last_name, email, order_date, amount
+FROM customer
+FULL JOIN order_
+ON customer.customer_id = order_.customer_id;

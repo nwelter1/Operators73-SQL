@@ -1,0 +1,23 @@
+-- ALTER/DROP STATEMENTS
+SELECT * FROM order_;
+
+-- removing an existing column
+ALTER TABLE order_
+DROP column customer_id;
+
+-- adding a new column
+ALTER TABLE order_
+ADD COLUMN cashier VARCHAR(100);
+
+-- Inserting new data into existing rows
+UPDATE order_
+SET cashier = 'Nate'
+WHERE cashier IS NULL
+
+-- order id 2 made a return... set amount to 0
+UPDATE order_
+SET amount = 0
+WHERE order_id = 2;
+
+SELECT * FROM order_
+

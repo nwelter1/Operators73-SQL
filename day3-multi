@@ -1,0 +1,102 @@
+-- Joins, MultiJoins, Subqueries
+-- Multijoin to find an actor first/last name along with the movie titles they appear in
+SELECT actor.actor_id, first_name, last_name, film_actor.film_id, title, rating
+FROM actor
+JOIN film_actor
+ON actor.actor_id = film_actor.actor_id
+JOIN film
+ON film_actor.film_id = film.film_id;
+
+-- Join that will produce first/last info for customers from Angola
+SELECT first_name, last_name, country
+FROM customer
+JOIN address
+ON customer.address_id = address.address_id
+JOIN city
+ON address.city_id = city.city_id
+JOIN country
+ON city.country_id = country.country_id
+WHERE country = 'Angola';
+
+-- Find customer info (first/last, email) where the total amount of that 
+-- customer's payments is greater than $175
+SELECT first_name, last_name, SUM(amount)
+FROM customer
+JOIN payment
+ON customer.customer_id = payment.customer_id
+GROUP BY customer.customer_id
+HAVING SUM(amount) > 175
+ORDER BY SUM(amount) DESC;
+
+-- Subquery (aka a query within another query)
+
+-- Find customer information (id, first,last) where the total amount of that 
+-- customer's payments is greater than $175, and their id is over 200
+SELECT *
+FROM customer
+WHERE customer_id > 200;
+
+SELECT customer_id, SUM(amount)
+FROM payment
+GROUP BY customer_id;
+
+-- Adding 2 queries together
+
+SELECT customer_id, first_name, last_name, email
+FROM customer
+WHERE customer_id > 200 AND customer_id IN(
+	SELECT customer_id
+	FROM payment
+	GROUP BY customer_id
+	HAVING SUM(amount) > 175
+);
+
+-- Find a customer's information first/last/email for customers in Angola
+-- that spent $150 or more
+SELECT customer.customer_id,first_name, last_name, email, country
+FROM customer
+JOIN address
+ON customer.address_id = address.address_id
+JOIN city
+ON address.city_id = city.city_id
+JOIN country
+ON city.country_id = country.country_id
+WHERE country = 'Canada' AND customer_id IN(
+	SELECT customer_id
+	FROM payment
+	GROUP BY customer_id
+	HAVING SUM(amount) > 150
+);
+
+-- Using a subquery, find all films (title, release date, rating)
+-- with a language of 'English'
+SELECT title, release_year, rating
+FROM film
+WHERE language_id IN(
+	SELECT language_id
+	FROM "language"
+	WHERE "name" = 'English'
+);
+
+-- Basic Example - find all actors who have appeared in over 25 movies
+SELECT actor_id,first_name, last_name
+FROM actor
+WHERE actor_id IN(
+	SELECT actor_id
+	FROM film_actor
+	GROUP BY actor_id
+	HAVING COUNT(actor_id) > 25
+);
+-- using joins
+SELECT first_name, last_name, COUNT(actor.actor_id)
+FROM actor
+JOIN film_actor
+ON actor.actor_id = film_actor.actor_id
+GROUP BY actor.actor_id
+HAVING COUNT(actor.actor_id) > 25;
+
+
+
+
+
+
